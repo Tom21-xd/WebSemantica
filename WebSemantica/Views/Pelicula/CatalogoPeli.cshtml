@@ -1,0 +1,77 @@
+﻿@model IEnumerable<WebSemantica.Models.Pelicula>
+
+@{
+    ViewData["Title"] = "CatalogoPeli";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Catalogo de peliculas</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<div class="table-responsive">
+    <table class="table align-middle text-center">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Nombre)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Descripcion)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FechaLanzamiento)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Presupuesto)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Recaudacion)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Pais)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.preview)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nombre)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Descripcion)
+                    </td>
+                    <td>
+                        
+                        @Html.DisplayFor(modelItem => item.FechaLanzamiento)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Presupuesto)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Recaudacion)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Pais)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.preview)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
