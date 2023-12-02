@@ -10,68 +10,24 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<div class="table-responsive">
-    <table class="table align-middle text-center">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Nombre)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Descripcion)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FechaLanzamiento)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Presupuesto)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Recaudacion)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Pais)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.preview)
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Nombre)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Descripcion)
-                    </td>
-                    <td>
-                        
-                        @Html.DisplayFor(modelItem => item.FechaLanzamiento)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Presupuesto)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Recaudacion)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Pais)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.preview)
-                    </td>
-                    <td>
-                        @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                        @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                        @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+<div class="container">
+    <div class="row row-cols-auto " style="justify-content:center;">
+        @foreach (Pelicula pe in Model)
+        {
+            <div class="col">
+                <div class="card" style="width: 25rem;">
+                    <img src="@pe.UrlImagen" class="card-img-top" style="">
+                    <div class="card-body">
+                        <h5 class="card-title">@pe.Nombre</h5>
+                        <p class="card-text">@pe.preview</p>
+                        <a href="#" class="btn btn-primary">Ver mas</a>
+                    </div>
+                </div>
+            </div>
+            
+        }
+    </div>
+   
+
 
 </div>

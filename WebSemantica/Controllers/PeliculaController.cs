@@ -23,23 +23,34 @@ namespace WebSemantica.Controllers
                     "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> " +
                     "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> " +
                     "PREFIX dato: <http://www.semanticweb.org/johan/ontologies/2023/10/Cine#> " +
-                    "SELECT  ?nombre ?desc ?pelicula ?fecha " +
-                    "WHERE { " +
-                        "?pelicula rdf:type dato:Pelicula. " +
-                        "?pelicula dato:Nombre ?nombre. " +
-                        "?pelicula dato:Descripcion ?desc." +
-                        "?pelicula dato:FechaLanzamiento ?fecha "+
-                    "} "
+                    "SELECT ?np ?desc ?pe ?fecha ?pre ?rec ?pa ?pun ?url " +
+                    "WHERE {" +
+                        "?pe rdf:type dato:Pelicula." +
+                        "?pe dato:Nombre ?np." +
+                        "?pe dato:Descripcion ?desc." +
+                        "?pe dato:FechaLanzamiento ?fecha." +
+                        "?pe dato:Presupuesto ?pre." +
+                        "?pe dato:Recaudacion ?rec." +
+                        "?pe dato:Pais ?pa." +
+                        "?pe dato:Puntuacion ?pun . "+
+                        "?pe dato:Imagen ?url . "+
+                    "}"
                 );
                 foreach (var pe in resultado.Results)
                 {
                     var dato = pe.ToList();
                     pelis.Add(new Pelicula()
                     {
-                        Nombre = dato[0].Value.ToString(),
-                        Descripcion = dato[1].Value.ToString(),
-                        preview = dato[1].Value.ToString().Substring(0, 100),
-                        Id = dato[2].Value.ToString()
+                        Nombre = dato[0].Value.ToString().Replace("^^http://www.w3.org/2001/XMLSchema#string", ""),
+                        Descripcion = dato[1].Value.ToString().Replace("^^http://www.w3.org/2001/XMLSchema#string", ""),
+                        preview = dato[1].Value.ToString().Substring(0, 100) +"...",
+                        Id = dato[2].Value.ToString(),
+                        FechaLanzamiento = DateOnly.Parse(dato[3].Value.ToString().Substring(0,10).Replace("T"," ")),
+                        Presupuesto = dato[4].Value.ToString().Replace("^^http://www.w3.org/2001/XMLSchema#float", "") +" Millones USD",
+                        Recaudacion = dato[5].Value.ToString().Replace("^^http://www.w3.org/2001/XMLSchema#float", "") +" Millones USD",
+                        Pais = dato[6].Value.ToString().Replace("^^http://www.w3.org/2001/XMLSchema#string", ""),
+                        Puntuacion = dato[7].Value.ToString().Replace("^^http://www.w3.org/2001/XMLSchema#float", ""),
+                        UrlImagen = dato[8].Value.ToString().Replace("^^http://www.w3.org/2001/XMLSchema#anyURI", "")
                     });
                 }
             }catch(Exception ex)
