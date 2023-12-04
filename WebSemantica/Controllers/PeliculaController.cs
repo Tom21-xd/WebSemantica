@@ -8,11 +8,10 @@ namespace WebSemantica.Controllers
     public class PeliculaController : Controller
     {
         public SparqlRemoteEndpoint endpoint = new SparqlRemoteEndpoint(new Uri("http://localhost:3030/Peliculas/"));
-        public IActionResult Index()
-        {
-            return View();
-        }
-        public IActionResult CatalogoPeli()
+
+        [HttpPost]
+        [HttpGet]
+        public IActionResult CatalogoPeli(string Nom)
         {
             List<Pelicula> pelis = new List<Pelicula>();
             try
@@ -33,9 +32,11 @@ namespace WebSemantica.Controllers
                         "?pe dato:Presupuesto ?pre." +
                         "?pe dato:Recaudacion ?rec." +
                         "?pe dato:Pais ?pa." +
-                        "?pe dato:Puntuacion ?pun . "+
-                        "?pe dato:Imagen ?url . "+
+                        "?pe dato:Puntuacion ?pun." +
+                        "?pe dato:Imagen ?url." +
+                        (string.IsNullOrEmpty(Nom) ? "" : $"FILTER(contains(?np, lcase('{Nom}')))") +
                     "}"
+                    
                 );
                 foreach (var pe in resultado.Results)
                 {
@@ -105,5 +106,53 @@ namespace WebSemantica.Controllers
             }
             return View(aux);
         }
+
+        [HttpPost]
+        [HttpGet]
+        public IActionResult Puntuacion(string anio1, string anio2)
+        {
+            
+            List<Pelicula> pelis = new List<Pelicula>();
+            try
+            {
+                SparqlResultSet resultado = endpoint.QueryWithResultSet(
+                    "PREFIX xml: <http://www.w3.org/XML/1998/namespace/#> " +
+                    "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> " +
+                    "PREFIX owl: <http://www.w3.org/2002/07/owl#> " +
+                    "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> " +
+                    "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> " +
+                    "PREFIX dato: <http://www.semanticweb.org/johan/ontologies/2023/10/Cine#> " +
+                    "SELECT ?imagen ?Pel ?fecha ?punt " +
+                    "WHERE {" +
+                        "?pe rdf:type dato:Pelicula." +
+                        "?pe dato:Imagen ?imagen." +
+                        "?pe dato:Nombre ?Pel." +
+                        "?pe dato:Puntuacion ?punt ." +
+                        "?pe dato:FechaLanzamiento ?fecha." +
+                        (string.IsNullOrEmpty(anio1) ? "" : $"FILTER(YEAR(?fecha) >= {anio1})") +
+                        (string.IsNullOrEmpty(anio2) ? "" : $"FILTER(YEAR(?fecha) <= {anio2})") +
+                    "}"+
+                    "ORDER by desc(?punt)"
+
+                );
+                foreach (var pe in resultado.Results)
+                {
+                    var dato = pe.ToList();
+                    pelis.Add(new Pelicula()
+                    {
+                        UrlImagen = dato[0].Value.ToString().Replace("^^http://www.w3.org/2001/XMLSchema#anyURI", ""),
+                        Nombre = dato[1].Value.ToString().Replace("^^http://www.w3.org/2001/XMLSchema#string", ""),
+                        FechaLanzamiento = DateOnly.Parse(dato[2].Value.ToString().Substring(0, 10).Replace("T", " ")),
+                        Puntuacion = dato[3].Value.ToString().Replace("^^http://www.w3.org/2001/XMLSchema#float", ""),
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+            return View(pelis);
+        }
+
     }
 }

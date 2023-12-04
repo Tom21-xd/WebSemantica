@@ -8,10 +8,20 @@
 
 <h1>Catalogo de peliculas</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<div class="container">
+<div class="container mt-5">
+    <form action="@Url.Action("CatalogoPeli","Pelicula")" method="post">
+        <div class="row">
+            <div class="col">
+                <input class="form-control" placeholder="Nombre" name="Nom"></input>
+
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-outline-primary">Filtrar</button>
+            </div>
+
+        </div>
+       
+    </form>
     <div class="row row-cols-auto " style="justify-content:center;">
         @foreach (Pelicula pe in Model)
         {

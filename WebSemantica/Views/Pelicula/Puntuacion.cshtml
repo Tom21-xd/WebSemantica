@@ -1,0 +1,44 @@
+﻿@model IEnumerable<WebSemantica.Models.Pelicula>
+@{
+    ViewData["Title"] = "Puntuacion";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h1>puntuacion de peliculas</h1>
+<form action="@Url.Action("Puntuacion","Pelicula")" method="post">
+    <div class="row mt-5 ">
+        <div class="col">
+            <input class="form-control" placeholder="año incial" name="anio1"></input>
+        </div>
+        <div class="col">
+            <input class="form-control" placeholder="año final" name="anio2"></input>
+        </div>
+        <div class="col-auto">
+            <button class="btn btn-outline-primary" type="submit">Aplicar</button>
+        </div>
+    </div>
+</form>
+<div class="table-responsive mt-5">
+    <table class="table align-middle table-bordered">
+        <thead>
+            <tr>
+                <th>Imagen</th>
+                <th>Nombre</th>
+                <th>Fecha</th>
+                <th>Puntuacion</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(Pelicula pe in Model)
+            {
+                <tr class="text-center">
+                    <td>
+                        <img src="@pe.UrlImagen" style="height:180px; width:150px; "></img>
+                    </td>
+                    <td>@pe.Nombre</td>
+                    <td>@pe.FechaLanzamiento</td>
+                    <td>@pe.Puntuacion ⭐</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
