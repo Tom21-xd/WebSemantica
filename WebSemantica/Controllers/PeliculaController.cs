@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Web;
 using VDS.RDF.Query;
+using VDS.RDF.Query.Paths;
 using WebSemantica.Models;
 
 namespace WebSemantica.Controllers
@@ -145,6 +146,60 @@ namespace WebSemantica.Controllers
                         FechaLanzamiento = DateOnly.Parse(dato[2].Value.ToString().Substring(0, 10).Replace("T", " ")),
                         Puntuacion = dato[3].Value.ToString().Replace("^^http://www.w3.org/2001/XMLSchema#float", ""),
                     });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+            return View(pelis);
+        }
+
+        [HttpPost]
+        [HttpGet]
+        public IActionResult Genero(string genero)
+        {
+
+            List<Pelicula> pelis = new List<Pelicula>();
+            try
+            {
+                SparqlResultSet resultado = endpoint.QueryWithResultSet(
+                    
+                    "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> " +
+                    "PREFIX dato: <http://www.semanticweb.org/johan/ontologies/2023/10/Cine#> " +
+                    "SELECT ?imagen ?NombrePelicula (group_concat(?NombreGenero; separator=',') as ?generos) (group_concat(distinct?NombreDirector; separator=',') as ?directores)\r\n" +
+                    "WHERE {" +
+                        "?pelicula rdf:type dato:Pelicula." +
+                        "?pelicula dato:Imagen ?imagen. " +
+                        "?pelicula dato:Nombre ?NombrePelicula. " +
+                        "?pelicula dato:Pertenece_a  ?a. " +
+                        "?a dato:Nombre ?NombreGenero. " +
+                        "?pelicula dato:Es_Dirigida_Por ?d. " +
+                        "?d dato:Nombre ?NombreDirector. " +
+                        (string.IsNullOrEmpty(genero) ? "" : $"filter(contains(lcase(?NombreGenero), lcase('{genero}')))") +
+                    "}" +
+                    "group by ?imagen ?NombrePelicula"
+
+                );
+                var i = 0;
+                foreach (var pe in resultado.Results)
+                {
+                    var dato = pe.ToList();
+                    pelis.Add(new Pelicula()
+                    {
+                        UrlImagen = dato[0].Value.ToString().Replace("^^http://www.w3.org/2001/XMLSchema#anyURI", ""),
+                        Nombre = dato[1].Value.ToString().Replace("^^http://www.w3.org/2001/XMLSchema#string", "")
+                    });
+                    List<Genero> aux1 = new List<Genero>();
+                    var generos = dato[2].Value.ToString().Replace("^^http://www.w3.org/2001/XMLSchema#string", "").Split(",");
+                    for(var j=0; j<generos.Length; j++)
+                    {
+                        aux1.Add(new Genero()
+                        {
+                            Nombre = generos[j].ToString(),
+                        });         
+                    }
+                    pelis[i++].generos=aux1;
                 }
             }
             catch (Exception ex)

@@ -1,0 +1,47 @@
+﻿@model IEnumerable<WebSemantica.Models.Pelicula>
+
+@{
+    ViewData["Title"] = "Genero";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Genero</h1>
+<form action="@Url.Action("Genero","Pelicula")" method="post">
+    <div class="row mt-5 ">
+        <div class="col">
+            <input class="form-control" placeholder="Genero" name="genero"></input>
+        </div>
+        <div class="col-auto">
+            <button class="btn btn-outline-primary" type="submit">Aplicar</button>
+        </div>
+    </div>
+</form>
+<div class="table-responsive mt-5">
+    <table class="table align-middle table-bordered">
+        <thead>
+            <tr>
+                <th>Imagen</th>
+                <th>Nombre</th>
+                <th>Genero</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Pelicula pe in Model)
+            {
+                <tr >
+                    <td class="text-center">
+                        <img src="@pe.UrlImagen" style="height:180px; width:150px; "></img>
+                    </td>
+                    <td>@pe.Nombre</td>
+                    <td>
+                        <p></p>
+                        @foreach(Genero ge in pe.generos)
+                        {
+                            <p>🔹@ge.Nombre</p>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
