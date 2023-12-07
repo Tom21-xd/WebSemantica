@@ -12,6 +12,14 @@
         <div class="col">
             <input class="form-control" placeholder="año final" name="anio2"></input>
         </div>
+        <div class="col">
+            <select class="form-select" name="ordenar">
+                <option value="">Ordenar Por</option>
+                <option>Puntuacion</option>
+                <option>Fecha</option>
+            </select>
+        </div>
+
         <div class="col-auto">
             <button class="btn btn-outline-primary" type="submit">Aplicar</button>
         </div>
@@ -32,7 +40,7 @@
             {
                 <tr class="text-center">
                     <td>
-                        <img src="@pe.UrlImagen" style="height:180px; width:150px; "></img>
+                        <img src="@pe.UrlImagen" style="height:180px; width:150px; object-fit: contain; "></img>
                     </td>
                     <td>@pe.Nombre</td>
                     <td>@pe.FechaLanzamiento</td>

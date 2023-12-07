@@ -1,0 +1,54 @@
+﻿@model IEnumerable<WebSemantica.Models.Actor>
+
+@{
+    ViewData["Title"] = "Actores";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h1>Actores</h1>
+
+<div class="container mt-5">
+    <form action="@Url.Action("Actores","Pelicula")" method="post">
+        <div class="row">
+            <div class="col">
+                <input class="form-control" placeholder="Nombre" name="actor"></input>
+            </div>
+            <div class="col">
+                <input class="form-control" placeholder="Edad 1" name="edad1" type="number" min="0" max="100"></input>
+            </div>
+            <div class="col">
+                <input class="form-control" placeholder="Edad 2" name="edad2" type="number" min="0" max="100"></input>
+            </div>
+            <div class="col">
+                <input class="form-control" placeholder="Puntuacion" name="puntaje" type="text" min="0" max="5"></input>
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-outline-primary">Filtrar</button>
+            </div>
+
+        </div>
+
+    </form>
+    <div class="row row-cols-auto " style="justify-content:center;">
+        @foreach (Actor ac in Model)
+        {
+            <div class="col mt-5">
+                <div class="card" style="width: 25rem;">
+                    <img src="@ac.imagen" class="card-img-top" object-fit="cover" style="height:35rem; object-fit: contain;">
+                    <div class="card-body">
+                        <h5 class="card-title">@ac.Nombre</h5>
+                            @foreach(Pelicula pe in ac.peliculas)
+                            {
+                            <p>🔹 @pe.Nombre</p>
+                            }
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+
+
+
+</div>

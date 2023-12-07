@@ -11,6 +11,9 @@
         <div class="col">
             <input class="form-control" placeholder="Genero" name="genero"></input>
         </div>
+        <div class="col">
+            <input class="form-control" placeholder="director" name="director"></input>
+        </div>
         <div class="col-auto">
             <button class="btn btn-outline-primary" type="submit">Aplicar</button>
         </div>
@@ -22,7 +25,8 @@
             <tr>
                 <th>Imagen</th>
                 <th>Nombre</th>
-                <th>Genero</th>
+                <th>Generos</th>
+                <th>Directores</th>
             </tr>
         </thead>
         <tbody>
@@ -30,7 +34,7 @@
             {
                 <tr >
                     <td class="text-center">
-                        <img src="@pe.UrlImagen" style="height:180px; width:150px; "></img>
+                        <img src="@pe.UrlImagen" style="height:180px; width:150px; object-fit: contain; "></img>
                     </td>
                     <td>@pe.Nombre</td>
                     <td>
@@ -38,6 +42,13 @@
                         @foreach(Genero ge in pe.generos)
                         {
                             <p>🔹@ge.Nombre</p>
+                        }
+                    </td>
+                    <td>
+                        <p></p>
+                        @foreach (Director di in pe.directors)
+                        {
+                            <p>🔹@di.Nombre</p>
                         }
                     </td>
                 </tr>
