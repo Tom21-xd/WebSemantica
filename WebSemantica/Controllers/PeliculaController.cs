@@ -77,7 +77,8 @@ namespace WebSemantica.Controllers
                     "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> " +
                     "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> " +
                     "PREFIX dato: <http://www.semanticweb.org/johan/ontologies/2023/10/Cine#> " +
-                    "SELECT ?np ?desc ?pe ?fecha ?pre ?rec ?pa ?pun ?url " +
+                    "PREFIX dato: <http://www.semanticweb.org/johan/ontologies/2023/10/Cine#> " +
+                    "SELECT ?np ?desc ?pe ?fecha ?pre ?rec ?pa ?pun ?url  (group_concat(distinct?nomAc; separator=',') as ?a) (group_concat(distinct?NomExtra; separator=',') as ?ex) (group_concat(distinct?NomGen; separator=',') as ?ge) ?NomPro  (group_concat(distinct?NomDir; separator=',') as ?directores) " +
                     "WHERE {" +
                         "<"+id+"> rdf:type dato:Pelicula." +
                         "<" + id + "> dato:Nombre ?np." +
@@ -88,7 +89,18 @@ namespace WebSemantica.Controllers
                         "<" + id + "> dato:Pais ?pa." +
                         "<" + id + "> dato:Puntuacion ?pun . " +
                         "<" + id + "> dato:Imagen ?url . " +
-                    "}"
+                        "<" + id + "> dato:Es_Interpretada_Por ?Actores. " +
+                        "?Actores dato:Nombre ?nomAc. " +
+                        "<" + id + "> dato:Contiene ?Extra. " +
+                        "?Extra dato:Nombre ?NomExtra.  " +
+                        "<" + id + "> dato:Pertenece_a ?Genero. " +
+                        "?Genero dato:Nombre ?NomGen. " +
+                        "<" + id + ">  dato:Es_producida ?Productora. " +
+                        "?Productora dato:Nombre ?NomPro.  " +
+                        "<" + id + "> dato:Es_Dirigida_Por ?Director. " +
+                        "?Director dato:Nombre ?NomDir. " +
+                    "}" +
+                    "group  by ?np ?desc ?pe ?fecha ?pre ?rec ?pa ?pun ?url ?NomPro"
                 );
                 var dato = resultado.Results.Single().ToList();
                 aux.Nombre = dato[0].Value.ToString().Replace("^^http://www.w3.org/2001/XMLSchema#string", "");
@@ -101,6 +113,46 @@ namespace WebSemantica.Controllers
                 aux.Pais = dato[5].Value.ToString().Replace("^^http://www.w3.org/2001/XMLSchema#string", "");
                 aux.Puntuacion = dato[6].Value.ToString().Replace("^^http://www.w3.org/2001/XMLSchema#float", "");
                 aux.UrlImagen = dato[7].Value.ToString().Replace("^^http://www.w3.org/2001/XMLSchema#anyURI", "");
+                aux.actores = new List<Actor>();
+                var act = dato[8].Value.ToString().Replace("^^http://www.w3.org/2001/XMLSchema#string", "").Split(",");
+                for (var j = 0; j < act.Length; j++)
+                {
+                    aux.actores.Add(new Actor()
+                    {
+                        Nombre = act[j].ToString(),
+                    });
+                }
+                aux.extra = new List<Extra>();
+                var extra = dato[9].Value.ToString().Replace("^^http://www.w3.org/2001/XMLSchema#string", "").Split(",");
+                for (var j = 0; j < extra.Length; j++)
+                {
+                    aux.extra.Add(new Extra()
+                    {
+                        Nombre = extra[j].ToString(),
+                    });
+                }
+                aux.generos = new List<Genero>();
+                var generos = dato[10].Value.ToString().Replace("^^http://www.w3.org/2001/XMLSchema#string", "").Split(",");
+                for (var j = 0; j < generos.Length; j++)
+                {
+                    aux.generos.Add(new Genero()
+                    {
+                        Nombre = generos[j].ToString(),
+                    });
+                }
+                aux.productora = new Productora()
+                {
+                    Nombre = dato[11].Value.ToString().Replace("^^http://www.w3.org/2001/XMLSchema#string", ""),
+                };
+                aux.directors = new List<Director>();
+                var director = dato[12].Value.ToString().Replace("^^http://www.w3.org/2001/XMLSchema#string", "").Split(",");
+                for (var j = 0; j < director.Length; j++)
+                {
+                    aux.directors.Add(new Director()
+                    {
+                        Nombre = director[j].ToString(),
+                    });
+                }
             }
             catch (Exception ex)
             {
