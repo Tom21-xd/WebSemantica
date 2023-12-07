@@ -1,4 +1,5 @@
-﻿
+﻿@model IEnumerable<WebSemantica.Models.Productora>
+
 @{
     ViewData["Title"] = "Productora";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -6,3 +7,50 @@
 
 <h1>Productora</h1>
 
+<form action="@Url.Action("Productora","Pelicula")" method="post">
+    <div class="row mt-5 ">
+        <div class="col">
+            <input class="form-control" placeholder="Nombre del extra" name="nomExtra"></input>
+        </div>
+        <div class="col-auto">
+            <button class="btn btn-outline-primary" type="submit">Aplicar</button>
+        </div>
+    </div>
+</form>
+<div class="table-responsive mt-5">
+    <table class="table align-middle table-bordered">
+        <thead>
+            <tr>
+                <th>Imagen</th>
+                <th>Nombre</th>
+                <th>Peliculas</th>
+                <th>Extras</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Productora pe in Model)
+            {
+                <tr class="text-center">
+                    <td>
+                        <img src="@pe.Imagen" style="height:180px; width:150px; object-fit: contain; "></img>
+                    </td>
+                    <td>@pe.Nombre</td>
+                    <td>
+                        <p></p>
+                        @foreach (Pelicula ge in pe.peliculas)
+                        {
+                            <p>🔹@ge.Nombre</p>
+                        }
+                    </td>
+                    <td>
+                        <p></p>
+                        @foreach (Extra ge in pe.Extras)
+                        {
+                            <p>🔹@ge.Nombre</p>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,73 @@
+﻿@model WebSemantica.Models.Pelicula
+
+@{
+    ViewData["Title"] = "Pelicula";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Pelicula</h1>
+
+<form action="@Url.Action("Pelicula","Insertar")" method="post" class="needs-validation " novalidate>
+    <div class="row mt-5">
+        <div class="col">
+            <label>Nombre</label>
+            <input class="form-control" placeholder="Nombre" name="Nombre" required></input>
+            <div class="valid-feedback">
+                Looks good!
+            </div>
+        </div>
+        <div class="col">
+            <label>Pais</label>
+            <input class="form-control" placeholder="Pais" name="Pais" required></input>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col">
+            <label>Imagen</label>
+            <input class="form-control" placeholder="UrlImagen" name="UrlImagen" required></input>
+        </div>
+        <div class="col">
+            <label>Fecha</label>
+            <input class="form-control" placeholder="Fecha Lanzamiento" name="FechaLanzamiento" type="date" required></input>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col">
+            <label>Recaudacion</label>
+            <input class="form-control" placeholder="Recaudacion" name="Recaudacion" required></input>
+        </div>
+        <div class="col">
+            <label>Presupuesto</label>
+            <input class="form-control" placeholder="Presupuesto" name="Presupuesto" required></input>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col">
+            <label>Puntuacion</label>
+            <input class="form-control" placeholder="Puntuacion" name="Puntuacion" required></input>
+        </div>
+        <div class="col">
+            <label>Descripcion</label>
+            <textarea class="form-control" id="validationTextarea" placeholder="Descripcion" name="Descripcion" required></textarea>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-outline-primary mt-5">Aplicar</button>
+</form>
+<script>
+    (() => {
+        'use strict'
+
+        const forms = document.querySelectorAll('.needs-validation')
+
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
+</script>

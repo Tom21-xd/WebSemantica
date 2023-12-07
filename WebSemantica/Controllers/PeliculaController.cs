@@ -281,68 +281,67 @@ namespace WebSemantica.Controllers
 
         [HttpPost]
         [HttpGet]
-        public IActionResult Productora(string genero, string director)
+        public IActionResult Productora(string nomExtra)
         {
 
-            /*List<Pelicula> pelis = new List<Pelicula>();
+            List<Productora> productoras = new List<Productora>();
             try
             {
                 SparqlResultSet resultado = endpoint.QueryWithResultSet(
 
                     "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> " +
                     "PREFIX dato: <http://www.semanticweb.org/johan/ontologies/2023/10/Cine#> " +
-                    "SELECT ?imagen ?NombrePelicula (group_concat(?NombreGenero; separator=',') as ?generos) (group_concat(distinct?NombreDirector; separator=',') as ?directores)\r\n" +
+                    "SELECT ?imagen ?NombrePro (group_concat(distinct?NombrePeli; separator=',') as ?pelis)  (group_concat(distinct?NombreExtras; separator=',') as ?extra) " +
                     "WHERE {" +
-                        "?pelicula rdf:type dato:Pelicula." +
-                        "?pelicula dato:Imagen ?imagen. " +
-                        "?pelicula dato:Nombre ?NombrePelicula. " +
-                        "?pelicula dato:Pertenece_a  ?a. " +
-                        "?a dato:Nombre ?NombreGenero. " +
-                        "?pelicula dato:Es_Dirigida_Por ?d. " +
-                        "?d dato:Nombre ?NombreDirector. " +
-                        (string.IsNullOrEmpty(genero) ? "" : $"filter(contains(lcase(?NombreGenero), lcase('{genero}')))") +
-                        (string.IsNullOrEmpty(director) ? "" : $"filter(contains(lcase(?NombreDirector), lcase('{director}')))") +
+                        "?pro rdf:type dato:Productora. " +
+                        "?pro dato:Imagen ?imagen. " +
+                        "?pro dato:Nombre ?NombrePro. " +
+                        "?pro dato:Produce ?Pelicula. " +
+                        "?Pelicula dato:Nombre ?NombrePeli. " +
+                        "?Pelicula  dato:Contiene ?extras. " +
+                        "?extras dato:Nombre ?NombreExtras. " +
+                        (string.IsNullOrEmpty(nomExtra) ? "" : $"filter(contains(lcase(?NombreExtras), lcase('{nomExtra}')))") +
 
-                    "}" +
-                    "group by ?imagen ?NombrePelicula"
+                    "}" + 
+                    "group by ?imagen ?NombrePro "
 
                 );
                 var i = 0;
                 foreach (var pe in resultado.Results)
                 {
                     var dato = pe.ToList();
-                    pelis.Add(new Pelicula()
+                    productoras.Add(new Productora()
                     {
-                        UrlImagen = dato[0].Value.ToString().Replace("^^http://www.w3.org/2001/XMLSchema#anyURI", ""),
+                        Imagen = dato[0].Value.ToString().Replace("^^http://www.w3.org/2001/XMLSchema#anyURI", ""),
                         Nombre = dato[1].Value.ToString().Replace("^^http://www.w3.org/2001/XMLSchema#string", "")
                     });
-                    List<Genero> aux1 = new List<Genero>();
-                    var generos = dato[2].Value.ToString().Replace("^^http://www.w3.org/2001/XMLSchema#string", "").Split(",");
-                    for (var j = 0; j < generos.Length; j++)
+                    List<Pelicula> aux1 = new List<Pelicula>();
+                    var pelis = dato[2].Value.ToString().Replace("^^http://www.w3.org/2001/XMLSchema#string", "").Split(",");
+                    for (var j = 0; j < pelis.Length; j++)
                     {
-                        aux1.Add(new Genero()
+                        aux1.Add(new Pelicula()
                         {
-                            Nombre = generos[j].ToString(),
+                            Nombre = pelis[j].ToString(),
                         });
                     }
-                    pelis[i].generos = aux1;
-                    List<Director> aux2 = new List<Director>();
-                    var director1 = dato[3].Value.ToString().Replace("^^http://www.w3.org/2001/XMLSchema#string", "").Split(",");
-                    for (var j = 0; j < director1.Length; j++)
+                    productoras[i].peliculas = aux1;
+                    List<Extra> aux2 = new List<Extra>();
+                    var extras = dato[3].Value.ToString().Replace("^^http://www.w3.org/2001/XMLSchema#string", "").Split(",");
+                    for (var j = 0; j < extras.Length; j++)
                     {
-                        aux2.Add(new Director()
+                        aux2.Add(new Extra()
                         {
-                            Nombre = director1[j].ToString(),
+                            Nombre = extras[j].ToString(),
                         });
                     }
-                    pelis[i++].directors = aux2;
+                    productoras[i++].Extras = aux2;
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
-            }*/
-            return View();
+            }
+            return View(productoras);
         }
 
 
